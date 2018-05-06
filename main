@@ -1,0 +1,767 @@
+//There are 6 key function in this system : 1. Menu
+//                                          2. Add, update, delete Customer's/ Car/ Insurance Information.
+//                                          3. Search Function
+//                                          4. View All Function
+//                                          5. Summary Report Function
+//                                          6. Exit
+
+#include <iostream>
+#include <stdlib.h>
+#include <cstdlib>
+#include <conio.h>
+#include <stdio.h>
+#include <string>
+
+using namespace std;
+
+typedef struct
+{
+    string firstNameArr;
+  	string lastNameArr;
+    string iCno;
+    char dob[11];
+    string nationality;
+    string address;
+    char phoneNo[16];
+    string email;
+    string occupation;
+
+    char carNo[10];
+    //char expireDate[11];
+    int day, month, year;
+    float insuranceAmount;
+    char carUsage[31];
+    char manufacturingDate[11];
+
+    int package;
+    int option;
+    int additional;
+
+}record;
+
+// For linked list
+struct list
+{
+	list *head, *tail;
+    list *next;
+};
+
+//CLASS USED IN PROGRAM
+class carInsurance
+{	//interface of class carInsurance
+	//this is only accessible for user
+    public:
+        carInsurance *next; // Pointer to next node
+		carInsurance *head, *tail;
+		carInsurance *start_ptr = NULL; // Start Pointer (root)
+		carInsurance *temp;
+		carInsurance *temp2;
+
+		void add(int *x);
+		void presetdata();
+		void deleteFunc(int *x);
+		void viewAll(int *x);
+		void sortMonth(int *x);
+		void search(int *x);
+
+/*		carInsurance::~carInsurance()
+		{
+		    node* current = top;
+
+		    while (temp != NULL)
+		    {
+		        node* next = current->next;
+		        delete current;
+		        current = next;
+		    }
+
+		    top = NULL;
+		} */
+
+    carInsurance()
+    { // Set all variables to null
+        head = NULL;
+        tail = NULL;
+
+        paymentID = 0;
+    	total = 0;
+    	customerNo = 0;
+        name = " ";
+        iCno = " ";
+       	dob[10] = '\0';
+        nationality = " ";
+        address = " ";
+        phoneNo[15] = '\0';
+        email = " ";
+        occupation = " ";
+    	carNo[10] = '\0';
+        expireDate = " ";
+        insuranceAmount = 0;
+   		carUsage[30] = '\0';
+    	manufacturingDate[11] = '\0';
+
+        package = 0;
+        option = 0;
+        additional = 0;
+    }
+
+    //constructor name has to be the same as class
+    carInsurance(int n_paymentID,
+				int carInsurance_total,
+				int carInsurance_customerNo,
+				string carInsurance_name,
+                string carInsurance_iCno,
+                char carInsurance_dob[10],
+                string carInsurance_nationality,
+                string carInsurance_address,
+                char carInsurance_phoneNo[15],
+                string carInsurance_email,
+                string carInsurance_occupation,
+
+                char carInsurance_carNo[10],
+                string carInsurance_expireDate,
+                float carInsurance_insuranceAmount,
+                char carInsurance_carUsage[30],
+                char carInsurance_manufacturingDate[11],
+
+                int carInsurance_package,
+				int carInsurance_option,
+				int carInsurance_additional)
+    {
+    	paymentID = n_paymentID;
+    	total = carInsurance_total;
+    	customerNo = carInsurance_customerNo;
+        name = carInsurance_name;
+        iCno = carInsurance_iCno;
+        dob[10] = carInsurance_dob[10];
+        nationality = carInsurance_nationality;
+        address = carInsurance_address;
+        phoneNo[15] = carInsurance_phoneNo[15];
+        email = carInsurance_email;
+        occupation = carInsurance_occupation;
+        carNo[10] = carInsurance_carNo[10];
+        expireDate = carInsurance_expireDate;
+        insuranceAmount = carInsurance_insuranceAmount;
+        carUsage[30] = carInsurance_carUsage[30];
+        manufacturingDate[11] = carInsurance_manufacturingDate[11];
+        package = carInsurance_package;
+        option = carInsurance_option;
+        additional = carInsurance_additional;
+    } // end of constructor
+
+    // SET
+    /*void setChar(char carInsurance_dob[10],
+                char carInsurance_phoneNo[15],
+                char carInsurance_carNo[10],
+                char carInsurance_expireDate[10],
+                char carInsurance_carUsage[30],
+                char carInsurance_manufacturingDate[10])
+    {dob[10] = carInsurance_dob[10];
+     phoneNo[15] = carInsurance_phoneNo[15];
+     carNo[10] = carInsurance_carNo[10];
+     expireDate[11] = carInsurance_expireDate[11];
+     carUsage[30] = carInsurance_carUsage[30];
+     manufacturingDate[11] = carInsurance_manufacturingDate[11];} */
+
+    void setExpireDate(string carInsurance_expireDate){expireDate = carInsurance_expireDate;}
+    void setname(string carInsurance_name){name = carInsurance_name;}
+    void setiCno(string carInsurance_iCno){iCno = carInsurance_iCno;}
+    void setAddress(string carInsurance_address){address = carInsurance_address;}
+    void setString(string carInsurance_nationality, string carInsurance_email,string carInsurance_occupation)
+	{nationality = carInsurance_nationality; email = carInsurance_email; occupation = carInsurance_occupation;}
+    void setInt(int n_paymentID, int carInsurance_total, int carInsurance_customerNo, int carInsurance_package, int carInsurance_option, int carInsurance_additional)
+        {paymentID = n_paymentID; total = carInsurance_total; customerNo = carInsurance_customerNo; package = carInsurance_package; option = carInsurance_option; additional = carInsurance_additional;}
+    void setFloat (float carInsurance_insuranceAmount){insuranceAmount = carInsurance_insuranceAmount;}
+
+    // GET
+    string getExpiredate(){return expireDate;}
+    string getname(){return name;}
+    string getiCno(){return iCno;}
+    string getaddress(){return address;}
+    string getString(){return nationality; return email; return occupation;}
+    int getInt(){return paymentID; return total; return customerNo; return package; return option; return additional;}
+    float getFloat(){return insuranceAmount;}
+
+    private:
+    	int paymentID;
+    	int total;
+    	int customerNo;
+        string name;
+        string iCno;
+        char dob[10];
+        string nationality;
+        string address;
+        char phoneNo[15];
+        string email;
+        string occupation;
+
+        char carNo[10];
+		string expireDate;
+        float insuranceAmount;
+        char carUsage[30];
+        char manufacturingDate[11];
+
+        int package;
+        int option;
+        int additional;
+        int noCustomer[10];
+
+}; //end class
+
+//function declaration
+//to prevent overload run function outside
+
+void presetdata();
+void deleteFunc();
+void viewAll();
+carInsurance *start_ptr = NULL; // Start Pointer (root)
+
+//THE MAIN FUNCTION OF PROGRAM
+int main()
+{
+    carInsurance obj; // obj is class object
+    carInsurance *temp;
+	carInsurance *temp2;
+	int choice;
+	int total;
+
+	while(choice != 5)
+    {
+        cout << "______________________________________________\n" << endl;
+        cout << "   WELCOME TO MULTIWORLD INSURANCE COMPANY" << endl;
+        cout << "______________________________________________" << endl;
+        cout << "\nMain Menu:\n" << endl;
+        cout << "1. ADD, UPDATE, DELETE\n" << "2. SEARCH\n" << "3. VIEW ALL\n" << "4. SUMMARY REPORT\n" << "5. EXIT\n" << endl;
+        cout << "Enter your choice: ";
+        cin >> choice;
+        system("cls");
+
+        switch(choice)
+        {
+            case 1:
+            {
+                cout<<"Sub-Menu: \n1. Add\n2. Update\n3. Delete\nEnter your choice: ";
+                cin>>choice;
+                switch(choice)
+                {
+                    case 1:
+                    {
+                        cout << "\n___ADD NEW CUSTOMER___\n" << endl;
+                        int i;
+
+                        cout << "How many customer? ";
+                        cin >> total;
+                        for(i=0; i<total; ++i)
+                        {
+                        	temp = new carInsurance;
+                            cout << "________________________________\n";
+                            cout << "\n\tCUSTOMER NO. " << 1 + i;
+                            cout << "\n________________________________\n";
+                            obj.add(&total);
+                        }
+                        break;
+                    }
+
+                    case 2:
+                    {
+                        break;
+                    }
+
+                    case 3:
+                    {
+                        system ("pause");
+                        cout<<"Deleting the last node";
+                        obj.deleteFunc(&total);
+                        //obj.viewAll(&total);
+                        //Deleting all the nodes
+                        temp2 = start_ptr; // temp2 is not NULL - list not empty!
+                            while (temp2 != NULL)
+                            {
+                                start_ptr = start_ptr->next;
+                                delete temp2;		// points to the last node in the list
+                                temp2 = start_ptr;
+                            }
+                        system ("cls");
+                        break;
+                    }
+                } //End of switch case for Sub-Menu
+                system("cls");
+                break;
+            } //End of case 1 for Main Menu
+
+            case 2:
+            {
+                cout<<"______SEARCH______\n\n";
+                //temp->search(&total);
+                system("pause");
+                system("cls");
+
+                break;
+            }
+
+            case 3:
+            {
+				cout<<"______VIEW ALL______\n";
+                obj.presetdata();
+
+                temp->next = NULL; // Sets the node to be the last node
+		        if (start_ptr == NULL)
+		            start_ptr = temp;
+		        else
+		        {
+		            temp2 = start_ptr; // We know temp2 is not NULL - list not empty!
+		            while (temp2->next != NULL) // The loop will terminate when temp2
+		                temp2 = temp2->next;    // points to the last node in the list
+		            // Move to next link in chain
+		            temp2->next = temp; // Sets the pointer from that last node to point
+		                                // to the node that has just declared
+		        }
+				obj.viewAll(&total);
+                cout<<"\n";
+                system("pause");
+                system("cls");
+                break;
+			}
+
+			case 4:
+			{
+				cout << "___________________________\n";
+                cout << "\n\tSUMMARY REPORT\n";
+                cout << "___________________________\n\n";
+                cout << "1. Sorted by different month\n2. Sorted by different car type\n3. Sorted by different insurance" << endl;
+                cin >> choice;
+
+                switch(choice)
+                {
+                	case 1:
+                	{
+                		int total;
+                		temp->sortMonth(&total);
+                		system("cls");
+                		break;
+					}
+
+					case 2:
+                	{
+                		break;
+					}
+
+					case 3:
+                	{
+                		break;
+					}
+
+					default:
+						cout << "Wrong input! Please choose again: ";
+						cin >> choice;
+						system("pause");
+				}
+				break;
+			}
+
+            case 5:
+			{
+            	cout << "___________________________\n";
+                cout << "\n\tTHANK YOU!\t\n";
+                cout << "___________________________";
+                exit(0);
+			}
+
+            default:
+            	continue;
+        }// End of switch case
+    }// End of while
+	return 0; //indicates success
+}//End of main
+
+void carInsurance::add(int *x)
+{
+	temp = new carInsurance;
+
+	cout << "\n____Customer Information____\n" << endl;
+	cout << "Enter Payment ID: ";
+	cin >> temp->paymentID;
+	cout<<"Name: ";
+	cin.ignore();
+	getline(cin, temp->name);
+
+	cout<<"IC no: ";
+	getline(cin, temp->iCno);
+
+	cout<<"Date of Birth (dd/mm/yyyy): ";
+	cin >> temp->dob;
+
+	cout<<"Address: ";
+	cin.ignore();
+	getline(cin, temp->address);
+
+	cout<<"Nationality: ";
+	//cin.ignore();
+	getline(cin, temp->nationality);
+
+	cout<<"Mobile Number: ";
+	cin >> temp->phoneNo;
+
+	cout<<"Email: ";
+	cin.ignore();
+	getline(cin, temp->email);
+
+	cout<<"Occupation: ";
+	getline(cin, temp->occupation);
+
+	cout << "\n\n_____Car Information_____\n" << endl;
+	cout<<"Car Plate Number: ";
+	cin >> temp->carNo;
+
+	cout << "Insurance Expire Date: ";
+	cin.ignore();
+	getline(cin, temp->expireDate);
+
+	cout << "Usage of Car Model/Make: ";
+	cin >> temp->carUsage;
+
+	cout << "Manufacturing Date (DD/MM/YYYY): ";
+	cin >> temp->manufacturingDate;
+
+	cout << "\n\n___Insurance Information___\n" << endl;
+
+	cout << "Insurance Package" << endl;
+	cout << "1. Package A (Comprehensive Cover)" << endl;
+	cout << "\t-Covers losses or damages to your car due to accident, fire and theft" << endl;
+	cout << "\t-Covers Third Party death and bodily injuries" << endl;
+	cout << "\t-Covers Third Party property losses or damages" << endl;
+
+	cout << "\n2. Package B (Third Party Cover)" << endl;
+	cout << "\t-Covers Third Party death and bodily injuries" << endl;
+	cout << "\t-Covers Third Party property losses or damages" << endl;
+
+	cout << "\n3. Package C (Third Party, Fire & Theft Cover)" << endl;
+	cout << "\t-Covers losses or damages to your car due to fire or theft" << endl;
+	cout << "\t-Covers Third Party death and bodily injuries" << endl;
+	cout << "\t-Covers Third Party property losses or damages" << endl;
+
+	cout << "\nEnter the number of package that you choose: ";
+	cin >> temp->package;
+	if(temp->package>3)
+		cin >> temp->package;
+
+	cout << "\nDo you want to add any additional package(Press 1. Yes | 2. No) ";
+	cin >> temp->additional;
+
+	if(temp->additional==1)
+	{
+	    cout << "\nAdditional coverage policy option: " << endl;
+	    cout << "1. Road tax renewal" << endl;
+	    cout << "2. Name of second driver" << endl;
+	    cout << "3. Windscreen coverage" << endl;
+	    cout << "4. Rental reimbursement, which pays for a rental car if your car is in the \nshop following a covered collision or comprehensive claim." << endl;
+	    cout << "5. Roadside assistance or towing insurance, which provides help if you need \na battery jump, flat tire changed or tow to a repair shop after a mechanical breakdown." << endl;
+	    cout << "6. Full glass coverage, which pays to repair or replace chipped or broken window glass, without a deductible." << endl;
+	    cout << "\nWhich policy you want to add? ";
+	    cin >> temp->option;
+	}
+	else if(temp->additional==2)
+	    cout << "No Additional\n";
+
+	else
+	cout<<"\n";
+
+	temp->next = NULL; // Sets the node to be the last node
+    if (start_ptr == NULL)
+        start_ptr = temp;
+    else
+    {
+        temp2 = start_ptr;
+        while (temp2->next != NULL) // The loop will terminate when temp2
+            temp2 = temp2->next;		// points to the last node in the list
+        // Move to next link in chain
+        temp2->next = temp; // Sets the pointer from that last node to point
+        // to the node that has just declared
+    }
+
+} // End of add() function
+
+//function of preset data
+void carInsurance::presetdata() //5 preset data of customer information
+{
+
+    int info;
+    record * pt;
+
+    static record customer[5]=
+    {
+        {"Sarah"," Wong","680408-01-5836","08/04/1968","Malaysian","36,Taman Jaya,27670 Raub,Pahang","016-5993156",
+         "sallyyyyay@hotmail.com","barber","SDW3484", 16,11,2021, 15500.00,"Toyota Vios","07/11/2013",1,2},
+        {"Noraini"," Bt Sulaiman","840130-59-5942","30/01/1984","Malaysian","113A,Taman Indah,71550 Kuala Pilah,Negeri Sembilan",
+         "013-4859919","aiiniii@gmail.com","clerk","WEF5560", 19,10,2028, 12500.00,"Perodua Bezza","01/05/2018",3,4},
+        {"Justin"," A/L Sutheshen","910711-05-5773","11/07/1991","Malaysian","177,Taman Ixora,53100 Taman Melati,Kuala Lumpur",
+         "017-9472233","stsjustin@hotmail.com","Doctor","WSD3355", 29,12,2026, 20300.00,"Honda Civic","12/07/2016",2,5},
+        {"Jonathan"," Anak Steven","701224-10-5591","24/12/1970","Malaysian","12,Lorong 2D Unijaya,94300 Kota Samarahan,Sarawak",
+         "014-2448578","jostev@hotmail.com","Hawker","QVQ5821", 20,11,2019, 10350.00,"Proton Persona","06/08/2008",2,2},
+        {"Wai Chun"," Lim","751112-06-5789","12/11/1975","Malaysian","264,Kampung Baru,30100 Ipoh,Perak","011-12599738",
+         "lwchun@gmail.com","Teacher","PAQ6201", 18,10,2025, 18800.00,"Nissan Almera","06/05/2015",3,6},
+    };
+
+   for(info=0; info<5; ++info)
+    {
+        pt = &customer[info];
+        cout << "__________________________\n";
+        cout << "\nCUSTOMER NO. " << info + 1;
+        cout << "\n__________________________\n";
+
+        cout << "\n___Customer Information___\n" << endl;
+        cout << "Name: ";
+		cout << pt->firstNameArr << pt->lastNameArr << endl;
+        cout << "IC no.: ";
+		cout << pt->iCno << endl;
+        cout << "Date of Birth: ";
+		cout << pt->dob << endl;
+        cout << "Nationality: ";
+		cout << pt->nationality << endl;
+        cout << "Address: ";
+		cout << pt->address << endl;
+        cout << "Mobile Number: ";
+		cout << pt->phoneNo << endl;
+        cout << "Email: ";
+		cout << pt->email << endl;
+        cout << "Occupation: ";
+		cout << pt->occupation << endl;
+		cout << "\n_____Car Information_____\n" << endl;
+        cout << "Car Plate Number: ";
+		cout << pt->carNo << endl;
+        cout << "Insurance Expire Date: ";
+		cout << pt->day<<"/"<<pt->month<<"/"<<pt->year<< endl;
+        cout << "Amount to be insured: RM";
+		cout << pt->insuranceAmount << endl;
+        cout << "Usage of Car Model/Make: ";
+		cout << pt->carUsage << endl;
+        cout << "Manufacturing Date: ";
+		cout << pt->manufacturingDate << endl;
+		cout << "\n___Insurance Information___\n" << endl;
+        cout << "Insurance Package: ";
+
+        if(pt->package == 1)
+        {
+            cout << "\nPackage A (Comprehensive Cover)" << endl;
+            cout << "\t -Covers losses or damages to your car due to accident, fire and theft" << endl;
+            cout << "\t -Covers Third Party death and bodily injuries" << endl;
+            cout << "\t -Covers Third Party property losses or damages" << endl;
+        }
+        else if (pt->package == 2)
+        {
+            cout << "\n Package B (Third Party Cover)" << endl;
+            cout << "\t -Covers Third Party death and bodily injuries" << endl;
+            cout << "\t -Covers Third Party property losses or damages" << endl;
+        }
+        else if (pt->package == 3)
+        {
+            cout << "\n3. Package C (Third Party, Fire & Theft Cover)" << endl;
+            cout << "\t -Covers losses or damages to your car due to fire or theft" << endl;
+            cout << "\t -Covers Third Party death and bodily injuries" << endl;
+            cout << "\t -Covers Third Party property losses or damages" << endl;
+        }
+        else
+        cout << "No Package" << endl;
+
+        cout << "\nAdditional package: " << endl;
+        if (pt->option==1)
+        cout << "Road tax renewal" << endl;
+
+        else if (pt->option==2)
+        cout << "Name of second driver" << endl;
+
+        else if (pt->option==3)
+        cout << "Windscreen coverage" << endl;
+
+        else if (pt->option==4){
+        	cout << "Rental reimbursement, which pays for a rental car if your \ncar is in the shop following a covered collision or comprehensive claim." << endl;}
+
+        else if (pt->option==5){
+        cout << "Roadside assistance or towing insurance, which provides help if you need a \nbattery jump, flat tire changed or tow to a \nrepair shop after a mechanical breakdown." << endl;}
+
+        else if (pt->option==6){
+        cout << "Full glass coverage, which pays to repair or replace chipped or broken \nwindow glass, without a deductible." << endl;
+		}
+        else
+        cout << "No Additional" << endl;
+        cout << "\n";
+    }
+}
+
+//function to delete record
+void carInsurance::deleteFunc(int *x)
+{
+    int i;
+    int total=*x;
+    string input;
+    carInsurance *temp1, *temp2;
+
+	if (start_ptr == NULL)
+		cout << "The list is empty!" << endl;
+	else
+	{
+		temp1 = start_ptr;
+
+		if(temp1->next == NULL)
+		{
+			start_ptr = NULL;
+			delete temp1;
+		}
+		else
+		{
+			while (temp1->next != NULL)
+			{
+				temp2 = temp1;
+				temp1 = temp1->next;
+			}
+			delete temp1;
+			temp2->next = NULL;
+		}
+	}
+} //End of delete function
+
+//function to view all the record
+void carInsurance::viewAll(int *x)
+{
+	int i, total = *x;
+	//temp = new carInsurance;
+	float price, addPrice;
+
+	carInsurance *temp;
+	temp = start_ptr;
+
+	if(temp == NULL)
+		cout<<"\nNo new customer added...";
+	else
+	while(temp != NULL)// Display details for what temp points to
+    {
+        cout << "____________________________\n";
+		cout << "\n\tCUSTOMER NO. " << 6 + i;
+		cout << "\n__________________________\n";
+        cout << "\n___Customer Information___\n" << endl;
+        cout << "\nName : " << temp->name << endl;
+        cout << "IC: "<< temp->iCno << endl;
+        cout << "Date of Birth: " << temp->dob << endl;
+        cout << "Nationality: " << temp->nationality << endl;
+        cout << "Address: " << temp->address << endl;
+        cout << "Mobile Number: " << temp->phoneNo << endl;
+        cout << "Email: " << temp->email << endl;
+        cout << "Occupation: " << temp->occupation << endl;
+
+   		cout << "\n_____Car Information_____\n" << endl;
+        cout << "Car Plate Number: " << temp->carNo << endl;
+        cout << "Insurance Expire Date: " << temp->expireDate << endl;
+        cout << "Usage of Car Model/Make: " << temp->carUsage << endl;
+        cout << "Manufacturing Date: " << temp->manufacturingDate << endl;
+
+		cout << "\n___Insurance Information___\n" << endl;
+        cout << "Insurance Package:" << endl;
+        if(temp->package == 1)
+        {
+            cout << "\nPackage A (Comprehensive Cover)" << endl;
+            cout << "\t-Covers losses or damages to your car due to accident, fire and theft    " << endl;
+            cout << "\t-Covers Third Party death and bodily injuries                            " << endl;
+            cout << "\t-Covers Third Party property losses or damages                           " << endl;
+            price = 1000;
+
+        }
+        else if (temp->package == 2)
+        {
+            cout << "\nPackage B (Third Party Cover)" << endl;
+            cout << "\t-Covers Third Party death and bodily injuries" << endl;
+            cout << "\t-Covers Third Party property losses or damages" << endl;
+            price = 1500;
+        }
+        else if (temp->package == 3)
+        {
+            cout << "\nPackage C (Third Party, Fire & Theft Cover)" << endl;
+            cout << "\t-Covers losses or damages to your car due to fire or theft" << endl;
+            cout << "\t-Covers Third Party death and bodily injuries" << endl;
+            cout << "\t-Covers Third Party property losses or damages" << endl;
+            price = 900;
+        }
+        else
+        cout << "No package available" << endl;
+
+        if(temp->additional == 1)
+        {
+	        cout << "\nAdditional package: "<< endl;
+	        if (temp->option==1){
+	            cout << "Road tax renewal" << endl;
+	            addPrice = 50;
+	        }
+
+	        else if (temp->option==2){
+	            cout << "Name of second driver" << endl;
+	            addPrice = 0;
+	        }
+
+	        else if (temp->option==3){
+	            cout << "Windscreen coverage" << endl;
+	            addPrice = 20;
+	        }
+
+	        else if (temp->option==4){
+	            cout << "Rental reimbursement" << endl;
+	            addPrice = 50;
+	        }
+
+	        else if (temp->option==5){
+	            cout << "Roadside assistance or towing insurance" << endl;
+	            addPrice = 80;
+	        }
+
+	        else if (temp->option==6){
+	            cout << "Full glass coverage" << endl;
+	            addPrice = 70;
+	        }
+	        else
+	        	cout << "Not availabe"<< endl;
+		}
+	    else{
+	        cout << "No additional package" << endl;
+	        price = 0;
+	    }
+	    temp->insuranceAmount = price + addPrice;
+	    cout << "Amount to be insured: RM" << temp->insuranceAmount << endl;
+			temp = temp->next;
+    }//End of While Loop
+}// End of view all function
+
+void carInsurance::search(int *x)
+{
+    /*int i=0, searchID;
+	cout<<"Enter payment ID to find:";
+	cin>>searchID;
+    temp=head;
+    while(temp!=NULL)
+    {
+        i++;
+        if(searchID==temp->paymentID)
+        {
+            cout<<"\n Searched value "<< searchID << " found in the location of " << i;
+            return i;
+        }
+        temp=temp->next;
+    }
+    printf("\n Not found "<<searchID<<" in Linked List."; */
+
+} //End of search
+
+void carInsurance::sortMonth(int *x)
+{
+	int i, j, total = *x;
+	//taking substring of expireDate's month
+	std::string str2 = temp->expireDate.substr (3,2);
+
+    for (int i=0; i<total-1; i++)
+    {
+        for (int j=i+1; j<total; j++)
+        {
+            if (str2 = "01")
+            {
+                viewAll();
+            }
+        }
+    }
+}//End of sortMonth
